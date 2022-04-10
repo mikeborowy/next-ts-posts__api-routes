@@ -1,9 +1,34 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from "next";
+import Head from "next/head";
+
+import { FormEvent, useRef, useState } from "react";
+import { fetchFeedbackAPI } from "../api/fetchFeedback";
+
+import { FeedbackModel } from "../models/FeedbackModel";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
+  const [feedbackList, setFeedbackList] = useState<FeedbackModel[] | null>(
+    null
+  );
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const feedbackInputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmitForm = async (event: FormEvent) => {
+    event.preventDefault();
+    const email = emailInputRef.current?.value ?? "";
+    const feedback = feedbackInputRef.current?.value ?? "";
+    const response = await fetchFeedbackAPI({
+      method: "POST",
+      body: { email, feedback },
+    });
+  };
+
+  const handleLoadData = async () => {
+    const response = await fetchFeedbackAPI<FeedbackModel[]>();
+    setFeedbackList(response.data);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,60 +38,33 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.tsx</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        <h1>Home Page</h1>
+        <form onSubmit={handleSubmitForm}>
+          <div>
+            <label>Your email address</label>
+            <input type="email" id="email" ref={emailInputRef} />
+          </div>
+          <div>
+            <label>Feedback</label>
+            <textarea rows={5} id="feedback" ref={feedbackInputRef} />
+          </div>
+          <button>Send</button>
+        </form>
+        <button onClick={handleLoadData}>Load data</button>
+        <h4>List</h4>
+        <ul>
+          {feedbackList?.map((feedback) => {
+            return (
+              <li key={feedback.id}>
+                <div>{feedback.email}</div>
+                <div>{feedback.feedback}</div>
+              </li>
+            );
+          })}
+        </ul>
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
