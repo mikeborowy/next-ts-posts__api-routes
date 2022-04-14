@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 //http://localhost:3000/api/feedback
-import { FeedbackModel } from "../../../models/FeedbackModel";
 import fs from "fs";
-import { APIResponse } from "../../../models/api/APIResponse";
-import { APIRequest } from "../../../models/api/APIRequest";
 import { FEEDBACK_DIR_PATH } from "../../../constants/feedbackDirectoryPath";
 import { extractData } from "../../../helpers/extractData";
+import type { FeedbackModel } from "../../../models/FeedbackModel";
+import { APIRequest } from "../@types/APIRequest";
+import { APIResponse } from "../@types/APIResponse";
 
 type FeedbackDetailsModel = "Missing Email" | "Missing Feedback";
 
@@ -27,7 +27,7 @@ export default function feedbackAPIPageHandler(
 
     if (!feedback) {
       res.status(200).json({
-        message: `Missing field`,
+        message: "Missing field",
         data: null,
         details: "Missing Feedback",
       });

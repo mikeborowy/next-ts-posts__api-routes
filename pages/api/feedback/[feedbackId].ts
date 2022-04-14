@@ -1,14 +1,14 @@
 import { FEEDBACK_DIR_PATH } from "../../../constants/feedbackDirectoryPath";
 import { extractData } from "../../../helpers/extractData";
-import { APIRequest } from "../../../models/api/APIRequest";
-import { APIResponse } from "../../../models/api/APIResponse";
 import { FeedbackModel } from "../../../models/FeedbackModel";
+import { APIRequest } from "../@types/APIRequest";
+import { APIResponse } from "../@types/APIResponse";
 
 type FeedbackAPIParams = {
   feedbackId: string;
 };
 
-export default function feedbackAPIPageHandler(
+export default function feedbackAPIPagesHandler(
   req: APIRequest<FeedbackAPIParams>,
   res: APIResponse<FeedbackModel>
 ) {
@@ -16,5 +16,10 @@ export default function feedbackAPIPageHandler(
   const feedbackList: FeedbackModel[] = extractData(FEEDBACK_DIR_PATH);
   const feedback = feedbackList.find((feedback) => feedback.id === feedbackId);
 
-  res.status(200).json({ message: "Success", data: feedback });
+  if (feedback) {
+    res.status(200).json({ message: "Success", data: feedback });
+    return;
+  }
+
+  res.status(200).json({ message: "Not found", data: null });
 }
