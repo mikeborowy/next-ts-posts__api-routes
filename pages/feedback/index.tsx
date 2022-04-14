@@ -9,7 +9,9 @@ type FeedbackPageProps = {
   feedbackList: FeedbackModel[];
 };
 
-export const FeedbackPage: NextPage<FeedbackPageProps> = (props) => {
+export const FeedbackPage: NextPage<FeedbackPageProps> = (
+  props: FeedbackPageProps
+) => {
   const { feedbackList } = props;
   const [feedbackDetails, setFeedbackDetails] =
     useState<FeedbackModel | null>();

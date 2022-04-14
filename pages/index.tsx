@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { FormEvent, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { fetchFeedbackAPI } from "../api/fetchFeedback";
 import { FeedbackModel } from "../models/FeedbackModel";
 
@@ -15,7 +15,7 @@ const Home: NextPage = () => {
     event.preventDefault();
     const email = emailInputRef.current?.value ?? "";
     const feedback = feedbackInputRef.current?.value ?? "";
-    const response = await fetchFeedbackAPI({
+    const response = await fetchFeedbackAPI<FeedbackModel>({
       method: "POST",
       body: { email, feedback },
     });

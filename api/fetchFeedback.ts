@@ -1,6 +1,5 @@
 import { FeedbackModel } from "../models/FeedbackModel";
-import { APIMethod } from "../pages/api/@types/APIMethod";
-import { APIResponseSchema } from "../pages/api/@types/APIResponse";
+import { APIMethod, APIResponseSchema } from "../pages/api/@types";
 
 type OptionsType = {
   method: APIMethod;
